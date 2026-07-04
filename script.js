@@ -17,11 +17,14 @@ function updateQR(){
     img.src = qrImages[qrIndex];
   });
 
-  // reinicia animação da barra
+  // reinicia animação da barra — usando requestAnimationFrame para compatibilidade com iOS
   document.querySelectorAll(".progress-bar").forEach(bar=>{
     bar.style.animation = "none";
-    bar.offsetHeight;
-    bar.style.animation = null;
+    // força reflow de forma estável no iOS Safari
+    void bar.getBoundingClientRect();
+    requestAnimationFrame(() => {
+      bar.style.animation = "";
+    });
   });
 }
 
@@ -33,58 +36,94 @@ setInterval(updateQR, 20000);
 const track = document.querySelector('.carousel-track');
 let currentIndex = 0;
 let startX = 0;
+let startY = 0;
 let isDragging = false;
+let swipeDirectionLocked = false; // evita re-lock durante o mesmo gesto
 
-function handleStart(x) {
+function handleStart(x, y) {
   startX = x;
+  startY = y;
   isDragging = true;
+  swipeDirectionLocked = false;
 }
 
-function handleMove(x) {
-  if(!isDragging) return;
-  let diff = startX - x;
+function handleMove(x, y, event) {
+  if (!isDragging) return;
 
-  if(diff > 50){
+  const diffX = startX - x;
+  const diffY = startY - y;
+
+  // Só bloqueia scroll vertical se o gesto for claramente horizontal
+  if (!swipeDirectionLocked) {
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+      swipeDirectionLocked = true;
+    } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
+      // gesto vertical — libera para o iOS scrollar normalmente
+      isDragging = false;
+      return;
+    }
+  }
+
+  // Só previne o default (e impede scroll) quando é swipe horizontal confirmado
+  if (swipeDirectionLocked && event) {
+    event.preventDefault();
+  }
+
+  if (diffX > 50) {
     currentIndex = Math.min(currentIndex + 1, 3);
     moveCarousel();
     isDragging = false;
+    swipeDirectionLocked = false;
   }
 
-  if(diff < -50){
+  if (diffX < -50) {
     currentIndex = Math.max(currentIndex - 1, 0);
     moveCarousel();
     isDragging = false;
+    swipeDirectionLocked = false;
   }
+}
+
+function handleEnd() {
+  isDragging = false;
+  swipeDirectionLocked = false;
 }
 
 function moveCarousel(){
   track.style.transform = `translateX(-${currentIndex * 100}%)`;
 }
 
-// Touch events
-track.addEventListener('touchstart', e=>{
-  e.preventDefault();
-  handleStart(e.touches[0].clientX);
+// Touch events — iOS requer touchend e touchcancel para resetar estado
+track.addEventListener('touchstart', e => {
+  // NÃO chama preventDefault aqui — o iOS precisa processar o início do gesto normalmente
+  handleStart(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: true });
+
+track.addEventListener('touchmove', e => {
+  handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
 }, { passive: false });
 
-track.addEventListener('touchmove', e=>{
-  e.preventDefault();
-  handleMove(e.touches[0].clientX);
-}, { passive: false });
+track.addEventListener('touchend', () => {
+  handleEnd();
+}, { passive: true });
+
+track.addEventListener('touchcancel', () => {
+  handleEnd();
+}, { passive: true });
 
 // Mouse events (desktop)
-track.addEventListener('mousedown', e=>{
-  handleStart(e.clientX);
+track.addEventListener('mousedown', e => {
+  handleStart(e.clientX, e.clientY);
 });
 
-track.addEventListener('mousemove', e=>{
-  handleMove(e.clientX);
+track.addEventListener('mousemove', e => {
+  handleMove(e.clientX, e.clientY, null);
 });
 
-track.addEventListener('mouseup', ()=>{
-  isDragging = false;
+track.addEventListener('mouseup', () => {
+  handleEnd();
 });
 
-track.addEventListener('mouseleave', ()=>{
-  isDragging = false;
+track.addEventListener('mouseleave', () => {
+  handleEnd();
 });
