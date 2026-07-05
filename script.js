@@ -1,13 +1,4 @@
-// ===== RENDERIZAÇÃO DINÂMICA =====
-
 var STORAGE_KEY = 'meus-ingressos-data';
-
-var fallbackIngressos = [
-  { setor:"Cadeira Superior",  acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$380,00", secao:"CADEIRA SUPERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-  { setor:"Pista Premium",     acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$800,00", secao:"PISTA PREMIUM",     fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-  { setor:"Pista",             acesso:"Portão A", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$420,00", secao:"PISTA",             fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-  { setor:"Cadeira Inferior",  acesso:"Portão C", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$500,00", secao:"CADEIRA INFERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" }
-];
 
 function carregarDados() {
   try {
@@ -47,15 +38,11 @@ function renderizarIngressos(ingressos) {
   });
 }
 
-// Renderiza antes de tudo
 var dadosSalvos = carregarDados();
-var listaIngressos = (dadosSalvos && dadosSalvos.ingressos && dadosSalvos.ingressos.length > 0)
-  ? dadosSalvos.ingressos
-  : fallbackIngressos;
-renderizarIngressos(listaIngressos);
+if (dadosSalvos && dadosSalvos.ingressos && dadosSalvos.ingressos.length > 0) {
+  renderizarIngressos(dadosSalvos.ingressos);
+}
 
-
-// ===== QR DINÂMICO =====
 
 var qrImages = [
   "assets/qr1.png",
@@ -86,13 +73,9 @@ function updateQR(){
 setInterval(updateQR, 20000);
 
 
-// ===== SWIPE CARROSSEL (Pointer Events — iOS + Android + Desktop) =====
-
 var carousel  = document.querySelector('.carousel');
 var track     = document.querySelector('.carousel-track');
-var wrappers  = document.querySelectorAll('.ticket-wrapper');
-var total     = wrappers.length;
-
+var total     = document.querySelectorAll('.ticket-wrapper').length;
 var currentIndex = 0;
 
 function moveCarousel() {
@@ -155,3 +138,9 @@ track.addEventListener('pointercancel', function() {
   isPointerDown = false;
   isHorizontal  = null;
 });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(function() { console.log('SW registrado'); })
+    .catch(function(err) { console.log('SW erro:', err); });
+}
