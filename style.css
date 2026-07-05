@@ -180,10 +180,14 @@ body{
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .ticket-wrapper{
   min-width:100%;
+  flex-shrink: 0;
   box-sizing:border-box;
 }
 

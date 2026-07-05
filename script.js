@@ -13,14 +13,13 @@ let qrIndex = 0;
 function updateQR(){
   qrIndex = (qrIndex + 1) % qrImages.length;
 
-  document.querySelectorAll(".qr-img").forEach(img=>{
+  document.querySelectorAll(".qr-img").forEach(img => {
     img.src = qrImages[qrIndex];
   });
 
-  // reinicia animação da barra — usando requestAnimationFrame para compatibilidade com iOS
-  document.querySelectorAll(".progress-bar").forEach(bar=>{
+  // reinicia animação da barra de forma estável no iOS Safari
+  document.querySelectorAll(".progress-bar").forEach(bar => {
     bar.style.animation = "none";
-    // força reflow de forma estável no iOS Safari
     void bar.getBoundingClientRect();
     requestAnimationFrame(() => {
       bar.style.animation = "";
@@ -33,97 +32,101 @@ setInterval(updateQR, 20000);
 
 // ===== SWIPE CARROSSEL =====
 
-const track = document.querySelector('.carousel-track');
-let currentIndex = 0;
-let startX = 0;
-let startY = 0;
-let isDragging = false;
-let swipeDirectionLocked = false; // evita re-lock durante o mesmo gesto
+const carousel  = document.querySelector('.carousel');
+const track     = document.querySelector('.carousel-track');
+const wrappers  = document.querySelectorAll('.ticket-wrapper');
+const total     = wrappers.length; // 4 ingressos
 
-function handleStart(x, y) {
-  startX = x;
-  startY = y;
-  isDragging = true;
-  swipeDirectionLocked = false;
+let currentIndex = 0;
+
+// Usa pixels em vez de %, eliminando ambiguidade do WebKit/iOS
+function moveCarousel() {
+  const slideWidth = carousel.offsetWidth; // largura real do container em px
+  track.style.transform = `translateX(${-currentIndex * slideWidth}px)`;
 }
 
-function handleMove(x, y, event) {
-  if (!isDragging) return;
+// ---- TOUCH (iOS/Android) ----
 
-  const diffX = startX - x;
-  const diffY = startY - y;
+let touchStartX  = 0;
+let touchStartY  = 0;
+let isHorizontal = null; // null = ainda não determinado
 
-  // Só bloqueia scroll vertical se o gesto for claramente horizontal
-  if (!swipeDirectionLocked) {
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-      swipeDirectionLocked = true;
-    } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
-      // gesto vertical — libera para o iOS scrollar normalmente
-      isDragging = false;
-      return;
+track.addEventListener('touchstart', function(e) {
+  touchStartX  = e.touches[0].clientX;
+  touchStartY  = e.touches[0].clientY;
+  isHorizontal = null;
+  // passive: false aqui para que o iOS respeite nosso preventDefault no touchmove
+}, { passive: false });
+
+track.addEventListener('touchmove', function(e) {
+  if (e.touches.length > 1) return;
+
+  const diffX = e.touches[0].clientX - touchStartX;
+  const diffY = e.touches[0].clientY - touchStartY;
+
+  // Determina a direção uma única vez por gesto
+  if (isHorizontal === null) {
+    if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
+      isHorizontal = Math.abs(diffX) >= Math.abs(diffY);
     }
   }
 
-  // Só previne o default (e impede scroll) quando é swipe horizontal confirmado
-  if (swipeDirectionLocked && event) {
-    event.preventDefault();
+  // Impede o scroll da página apenas se o gesto for horizontal
+  if (isHorizontal === true) {
+    e.preventDefault();
   }
-
-  if (diffX > 50) {
-    currentIndex = Math.min(currentIndex + 1, 3);
-    moveCarousel();
-    isDragging = false;
-    swipeDirectionLocked = false;
-  }
-
-  if (diffX < -50) {
-    currentIndex = Math.max(currentIndex - 1, 0);
-    moveCarousel();
-    isDragging = false;
-    swipeDirectionLocked = false;
-  }
-}
-
-function handleEnd() {
-  isDragging = false;
-  swipeDirectionLocked = false;
-}
-
-function moveCarousel(){
-  track.style.transform = `translateX(-${currentIndex * 100}%)`;
-}
-
-// Touch events — iOS requer touchend e touchcancel para resetar estado
-track.addEventListener('touchstart', e => {
-  // NÃO chama preventDefault aqui — o iOS precisa processar o início do gesto normalmente
-  handleStart(e.touches[0].clientX, e.touches[0].clientY);
-}, { passive: true });
-
-track.addEventListener('touchmove', e => {
-  handleMove(e.touches[0].clientX, e.touches[0].clientY, e);
 }, { passive: false });
 
-track.addEventListener('touchend', () => {
-  handleEnd();
+track.addEventListener('touchend', function(e) {
+  // Usa changedTouches para ler a posição final corretamente no iOS
+  const diffX = e.changedTouches[0].clientX - touchStartX;
+
+  if (isHorizontal === true && Math.abs(diffX) > 40) {
+    if (diffX < 0) {
+      currentIndex = Math.min(currentIndex + 1, total - 1); // avança
+    } else {
+      currentIndex = Math.max(currentIndex - 1, 0);         // volta
+    }
+    moveCarousel();
+  }
+
+  isHorizontal = null;
 }, { passive: true });
 
-track.addEventListener('touchcancel', () => {
-  handleEnd();
+track.addEventListener('touchcancel', function() {
+  isHorizontal = null;
+  moveCarousel(); // snapback para posição atual
 }, { passive: true });
 
-// Mouse events (desktop)
+
+// ---- MOUSE (desktop) ----
+
+let mouseStartX    = 0;
+let isDraggingMouse = false;
+
 track.addEventListener('mousedown', e => {
-  handleStart(e.clientX, e.clientY);
+  mouseStartX     = e.clientX;
+  isDraggingMouse = true;
 });
 
 track.addEventListener('mousemove', e => {
-  handleMove(e.clientX, e.clientY, null);
+  if (!isDraggingMouse) return;
 });
 
-track.addEventListener('mouseup', () => {
-  handleEnd();
+track.addEventListener('mouseup', e => {
+  if (!isDraggingMouse) return;
+  const diffX = e.clientX - mouseStartX;
+  if (Math.abs(diffX) > 50) {
+    if (diffX < 0) {
+      currentIndex = Math.min(currentIndex + 1, total - 1);
+    } else {
+      currentIndex = Math.max(currentIndex - 1, 0);
+    }
+    moveCarousel();
+  }
+  isDraggingMouse = false;
 });
 
 track.addEventListener('mouseleave', () => {
-  handleEnd();
+  isDraggingMouse = false;
 });
