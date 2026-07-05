@@ -2,20 +2,12 @@
 
 var STORAGE_KEY = 'meus-ingressos-data';
 
-var fallbackDados = {
-  evento: {
-    nome: "ENHYPEN WORLD TOUR 'BLOOD SAGA' IN SÃO PAULO",
-    data: "04/07/2026",
-    hora: "19:30hs",
-    local: "Nubank Parque"
-  },
-  ingressos: [
-    { setor:"Cadeira Superior",  acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$380,00", secao:"CADEIRA SUPERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-    { setor:"Pista Premium",     acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$800,00", secao:"PISTA PREMIUM",     fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-    { setor:"Pista",             acesso:"Portão A", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$420,00", secao:"PISTA",             fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
-    { setor:"Cadeira Inferior",  acesso:"Portão C", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$500,00", secao:"CADEIRA INFERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" }
-  ]
-};
+var fallbackIngressos = [
+  { setor:"Cadeira Superior",  acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$380,00", secao:"CADEIRA SUPERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
+  { setor:"Pista Premium",     acesso:"Portão B", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$800,00", secao:"PISTA PREMIUM",     fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
+  { setor:"Pista",             acesso:"Portão A", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$420,00", secao:"PISTA",             fileira:"Não numerado", abertura:"16:00", inicio:"19:30" },
+  { setor:"Cadeira Inferior",  acesso:"Portão C", titular:"Camila Souza - 121.714.481-87", taxa:"INTEIRA - R$500,00", secao:"CADEIRA INFERIOR",  fileira:"Não numerado", abertura:"16:00", inicio:"19:30" }
+];
 
 function carregarDados() {
   try {
@@ -25,17 +17,11 @@ function carregarDados() {
   return null;
 }
 
-function renderizarPagina(dados) {
-  // header
-  var ev = dados.evento;
-  document.getElementById('evTitulo').textContent = ev.nome || '';
-  document.getElementById('evSubtitulo').textContent = (ev.data || '') + (ev.hora ? ' - ' + ev.hora : '') + (ev.local ? ' - ' + ev.local : '');
-
-  // ingressos
+function renderizarIngressos(ingressos) {
   var track = document.getElementById('carouselTrack');
   track.innerHTML = '';
 
-  dados.ingressos.forEach(function(ing) {
+  ingressos.forEach(function(ing) {
     var w = document.createElement('div');
     w.className = 'ticket-wrapper';
     w.innerHTML =
@@ -62,8 +48,11 @@ function renderizarPagina(dados) {
 }
 
 // Renderiza antes de tudo
-var dadosSalvos = carregarDados() || fallbackDados;
-renderizarPagina(dadosSalvos);
+var dadosSalvos = carregarDados();
+var listaIngressos = (dadosSalvos && dadosSalvos.ingressos && dadosSalvos.ingressos.length > 0)
+  ? dadosSalvos.ingressos
+  : fallbackIngressos;
+renderizarIngressos(listaIngressos);
 
 
 // ===== QR DINÂMICO =====

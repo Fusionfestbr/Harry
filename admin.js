@@ -111,13 +111,6 @@ function carregarDados() {
 function preencherFormulario(dados) {
   if (!dados) return;
 
-  if (dados.evento) {
-    document.getElementById('evNome').value = dados.evento.nome || '';
-    document.getElementById('evData').value = dados.evento.data || '';
-    document.getElementById('evHora').value = dados.evento.hora || '';
-    document.getElementById('evLocal').value = dados.evento.local || '';
-  }
-
   if (dados.ingressos && dados.ingressos.length > 0) {
     dados.ingressos.forEach(function(ing, i) {
       var card = criarCardIngresso(ing, i);
@@ -139,12 +132,6 @@ function adicionarIngresso(dados) {
 // --- Salvar ---
 function salvar() {
   var dados = {
-    evento: {
-      nome: document.getElementById('evNome').value.trim(),
-      data: document.getElementById('evData').value.trim(),
-      hora: document.getElementById('evHora').value.trim(),
-      local: document.getElementById('evLocal').value.trim()
-    },
     ingressos: []
   };
 
