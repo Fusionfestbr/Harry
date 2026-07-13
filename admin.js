@@ -14,7 +14,7 @@ var camposTemplate = [
   { key: 'secao',     label: 'SEÇÃO',     placeholder: 'Ex: CADEIRA SUPERIOR' },
   { key: 'fileira',   label: 'FILEIRA',   placeholder: 'Ex: Não numerado' },
   { key: 'abertura',  label: 'ABERTURA',  placeholder: 'Ex: 16:00' },
-  { key: 'inicio',    label: 'INÍCIO',    placeholder: 'Ex: 19:30' }
+  { key: 'inicio',    label: 'INÍCIO',    placeholder: 'Ex: 20:45' }
 ];
 
 // --- Renderiza um card de ingresso ---
