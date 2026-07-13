@@ -1,145 +1,575 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f2c2f">
-<meta name="description" content="Gerencie seus ingressos de eventos">
-<title>Ingresso</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f2c2f">
+  <meta name="description" content="Gerencie seus ingressos de eventos">
+  <title>Ingresso</title>
 
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
-<link rel="apple-touch-icon" href="assets/icon-152.png">
-<link rel="apple-touch-icon" sizes="152x152" href="assets/icon-152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-192.png">
-<link rel="apple-touch-icon" sizes="167x167" href="assets/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Meus Ingressos">
-<meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+  <link rel="apple-touch-icon" href="assets/icon-152.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="assets/icon-152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Meus Ingressos">
+  <meta name="mobile-web-app-capable" content="yes">
 
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="page">
 
+  <!-- ===== CABEÇALHO DO EVENTO ===== -->
   <div class="event-header">
     <a href="index.html" class="back">&lt;</a>
     <div>
       <h1 id="ingEventoNome">Harry Styles: Together, Together</h1>
-      <p id="ingEventoInfo">18/07/2026 - MorumBis</p>
+      <p  id="ingEventoInfo">18/07/2026 - MorumBis</p>
     </div>
   </div>
 
-<script>
-(function() {
-  try {
-    var raw = localStorage.getItem('meus-ingressos-data');
-    if (!raw) return;
-    var dados = JSON.parse(raw);
-    var ev = dados && dados.evento;
-    if (!ev) return;
-    if (ev.nome) document.getElementById('ingEventoNome').textContent = ev.nome;
-    var info = [];
-    if (ev.data)  info.push(ev.data);
-    if (ev.local) info.push(ev.local);
-    if (info.length) document.getElementById('ingEventoInfo').textContent = info.join(' - ');
-  } catch(e) {}
-})();
-</script>
+  <!-- Script que sobrescreve o cabeçalho com dados do localStorage -->
+  <script>
+  (function() {
+    try {
+      var raw  = localStorage.getItem('meus-ingressos-data');
+      if (!raw) return;
+      var dados = JSON.parse(raw);
+      var ev    = dados && dados.evento;
+      if (!ev) return;
+      if (ev.nome) document.getElementById('ingEventoNome').textContent = ev.nome;
+      var info = [];
+      if (ev.data)  info.push(ev.data);
+      if (ev.local) info.push(ev.local);
+      if (info.length) document.getElementById('ingEventoInfo').textContent = info.join(' - ');
+    } catch(e) {}
+  })();
+  </script>
 
+  <!-- ===== CARROSSEL DE INGRESSOS ===== -->
   <div class="carousel">
     <div class="carousel-track" id="carouselTrack">
 
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 1                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
       <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
         <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
         <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
         <div class="ticket-card top-card">
           <div class="ticket-top">
+
+            <!-- QR Code -->
             <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
             <div class="ticket-side">
-              <div class="side-block"><span class="mini-label">SETOR</span><span class="sector-name">Cadeira Superior</span></div>
-              <div class="side-block acesso"><span class="mini-label">ACESSO</span><span class="sector-name acesso-value">Portão B</span></div>
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Pit Disco</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 18</span>
+              </div>
               <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$1720,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">PIT DISCO</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
             </div>
           </div>
         </div>
-        <div class="ticket-card info-card">
-          <div class="info-full"><span class="mini-label">TITULAR</span><span class="info-value">Camila Souza - 121.714.481-87</span></div>
-          <div class="info-full"><span class="mini-label">TAXA</span><span class="info-value">INTEIRA - R$380,00</span></div>
-          <div class="info-row"><div><span class="mini-label">SEÇÃO</span><span class="info-value">CADEIRA SUPERIOR</span></div><div><span class="mini-label">FILEIRA</span><span class="info-value">Não numerado</span></div></div>
-          <div class="info-row"><div><span class="mini-label">ABERTURA</span><span class="info-value">16:00</span></div><div><span class="mini-label">INICIO</span><span class="info-value">19:30</span></div></div>
-        </div>
-      </div>
 
+      </div>
+      <!-- FIM INGRESSO 1 -->
+
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 2                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
       <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
         <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
         <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
         <div class="ticket-card top-card">
           <div class="ticket-top">
+
+            <!-- QR Code -->
             <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
             <div class="ticket-side">
-              <div class="side-block"><span class="mini-label">SETOR</span><span class="sector-name">Pista Premium</span></div>
-              <div class="side-block acesso"><span class="mini-label">ACESSO</span><span class="sector-name acesso-value">Portão B</span></div>
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Pit Square</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 18</span>
+              </div>
               <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$1720,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">PIT SQUARE</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
             </div>
           </div>
         </div>
-        <div class="ticket-card info-card">
-          <div class="info-full"><span class="mini-label">TITULAR</span><span class="info-value">Camila Souza - 121.714.481-87</span></div>
-          <div class="info-full"><span class="mini-label">TAXA</span><span class="info-value">INTEIRA - R$800,00</span></div>
-          <div class="info-row"><div><span class="mini-label">SEÇÃO</span><span class="info-value">PISTA PREMIUM</span></div><div><span class="mini-label">FILEIRA</span><span class="info-value">Não numerado</span></div></div>
-          <div class="info-row"><div><span class="mini-label">ABERTURA</span><span class="info-value">16:00</span></div><div><span class="mini-label">INICIO</span><span class="info-value">19:30</span></div></div>
-        </div>
-      </div>
 
+      </div>
+      <!-- FIM INGRESSO 2 -->
+
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 3                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
       <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
         <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
         <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
         <div class="ticket-card top-card">
           <div class="ticket-top">
+
+            <!-- QR Code -->
             <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
             <div class="ticket-side">
-              <div class="side-block"><span class="mini-label">SETOR</span><span class="sector-name">Pista</span></div>
-              <div class="side-block acesso"><span class="mini-label">ACESSO</span><span class="sector-name acesso-value">Portão A</span></div>
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Pit Circle</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 02</span>
+              </div>
               <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$1720,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">PIT CIRCLE</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
             </div>
           </div>
         </div>
-        <div class="ticket-card info-card">
-          <div class="info-full"><span class="mini-label">TITULAR</span><span class="info-value">Camila Souza - 121.714.481-87</span></div>
-          <div class="info-full"><span class="mini-label">TAXA</span><span class="info-value">INTEIRA - R$420,00</span></div>
-          <div class="info-row"><div><span class="mini-label">SEÇÃO</span><span class="info-value">PISTA</span></div><div><span class="mini-label">FILEIRA</span><span class="info-value">Não numerado</span></div></div>
-          <div class="info-row"><div><span class="mini-label">ABERTURA</span><span class="info-value">16:00</span></div><div><span class="mini-label">INICIO</span><span class="info-value">19:30</span></div></div>
-        </div>
-      </div>
 
+      </div>
+      <!-- FIM INGRESSO 3 -->
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 4                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
       <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
         <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
         <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
         <div class="ticket-card top-card">
           <div class="ticket-top">
+
+            <!-- QR Code -->
             <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
             <div class="ticket-side">
-              <div class="side-block"><span class="mini-label">SETOR</span><span class="sector-name">Cadeira Inferior</span></div>
-              <div class="side-block acesso"><span class="mini-label">ACESSO</span><span class="sector-name acesso-value">Portão C</span></div>
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Pit Kiss</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 02</span>
+              </div>
               <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$1720,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">PIT KISS</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
             </div>
           </div>
         </div>
-        <div class="ticket-card info-card">
-          <div class="info-full"><span class="mini-label">TITULAR</span><span class="info-value">Camila Souza - 121.714.481-87</span></div>
-          <div class="info-full"><span class="mini-label">TAXA</span><span class="info-value">INTEIRA - R$500,00</span></div>
-          <div class="info-row"><div><span class="mini-label">SEÇÃO</span><span class="info-value">CADEIRA INFERIOR</span></div><div><span class="mini-label">FILEIRA</span><span class="info-value">Não numerado</span></div></div>
-          <div class="info-row"><div><span class="mini-label">ABERTURA</span><span class="info-value">16:00</span></div><div><span class="mini-label">INICIO</span><span class="info-value">19:30</span></div></div>
-        </div>
-      </div>
 
-    </div>
-  </div>
-</div> <!-- page -->
+      </div>
+      <!-- FIM INGRESSO 4 -->
+
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 5                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
+        <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
+        <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
+        <div class="ticket-card top-card">
+          <div class="ticket-top">
+
+            <!-- QR Code -->
+            <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
+            <div class="ticket-side">
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Pista</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 02,04,18</span>
+              </div>
+              <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$861,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">PISTA</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- FIM INGRESSO 5 -->
+
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 6                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
+        <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
+        <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
+        <div class="ticket-card top-card">
+          <div class="ticket-top">
+
+            <!-- QR Code -->
+            <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
+            <div class="ticket-side">
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Cadeira Superior</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 05,16</span>
+              </div>
+              <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$982,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">CADEIRA SUPERIOR</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- FIM INGRESSO 6 -->
+
+ <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║          INGRESSO 7                  ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <div class="ticket-wrapper">
+
+        <!-- Logo Ticketmaster -->
+        <div class="ticketmaster-img"><img src="assets/ticketmaster.png"></div>
+        <div class="progress-container"><div class="progress-bar"></div></div>
+
+        <!-- Frente do ingresso (QR + Setor + Acesso) -->
+        <div class="ticket-card top-card">
+          <div class="ticket-top">
+
+            <!-- QR Code -->
+            <div class="qr-area"><img src="assets/qr1.png" class="qr-img"></div>
+
+            <div class="ticket-side">
+              <!-- SETOR -->
+              <div class="side-block">
+                <span class="mini-label">SETOR</span>
+                <span class="sector-name">Arquibancada</span>
+              </div>
+              <!-- ACESSO -->
+              <div class="side-block acesso">
+                <span class="mini-label">ACESSO</span>
+                <span class="sector-name acesso-value">Portão 06,15</span>
+              </div>
+              <button class="more-info-btn">Mais informação</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Verso do ingresso (informações detalhadas) -->
+        <div class="ticket-card info-card">
+          <!-- TITULAR -->
+          <div class="info-full">
+            <span class="mini-label">TITULAR</span>
+            <span class="info-value">Camila Souza - 121.714.481-87</span>
+          </div>
+          <!-- TAXA -->
+          <div class="info-full">
+            <span class="mini-label">TAXA</span>
+            <span class="info-value">INTEIRA - R$658,00</span>
+          </div>
+          <!-- SEÇÃO / FILEIRA -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">SEÇÃO</span>
+              <span class="info-value">ARQUIBANCADA</span>
+            </div>
+            <div>
+              <span class="mini-label">FILEIRA</span>
+              <span class="info-value">Não numerado</span>
+            </div>
+          </div>
+          <!-- ABERTURA / INICIO -->
+          <div class="info-row">
+            <div>
+              <span class="mini-label">ABERTURA</span>
+              <span class="info-value">16:00</span>
+            </div>
+            <div>
+              <span class="mini-label">INICIO</span>
+              <span class="info-value">20:45</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- FIM INGRESSO 7 -->
+
+    </div><!-- fim carousel-track -->
+  </div><!-- fim carousel -->
+
+</div><!-- fim page -->
+
 <script type="module" src="./script.js"></script>
 </body>
 </html>
