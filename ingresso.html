@@ -28,10 +28,27 @@
   <div class="event-header">
     <a href="index.html" class="back">&lt;</a>
     <div>
-      <h1>Harry Styles: Together, Together</h1>
-      <p>18/07/2026 - MorumBis</p>
+      <h1 id="ingEventoNome">Harry Styles: Together, Together</h1>
+      <p id="ingEventoInfo">18/07/2026 - MorumBis</p>
     </div>
   </div>
+
+<script>
+(function() {
+  try {
+    var raw = localStorage.getItem('meus-ingressos-data');
+    if (!raw) return;
+    var dados = JSON.parse(raw);
+    var ev = dados && dados.evento;
+    if (!ev) return;
+    if (ev.nome) document.getElementById('ingEventoNome').textContent = ev.nome;
+    var info = [];
+    if (ev.data)  info.push(ev.data);
+    if (ev.local) info.push(ev.local);
+    if (info.length) document.getElementById('ingEventoInfo').textContent = info.join(' - ');
+  } catch(e) {}
+})();
+</script>
 
   <div class="carousel">
     <div class="carousel-track" id="carouselTrack">

@@ -5,6 +5,18 @@ var btnSave = document.getElementById('btnSave');
 var btnPreview = document.getElementById('btnPreview');
 var btnReset = document.getElementById('btnReset');
 var toast = document.getElementById('toast');
+var eventoNome = document.getElementById('eventoNome');
+var eventoData = document.getElementById('eventoData');
+var eventoHorario = document.getElementById('eventoHorario');
+var eventoLocal = document.getElementById('eventoLocal');
+var eventoThumb = document.getElementById('eventoThumb');
+var thumbPreview = document.getElementById('thumbPreview');
+
+// Preview da thumb ao mudar dropdown
+eventoThumb.addEventListener('change', function() {
+  thumbPreview.src = eventoThumb.value;
+  thumbPreview.style.display = 'block';
+});
 
 var camposTemplate = [
   { key: 'setor',     label: 'SETOR',     placeholder: 'Ex: Cadeira Superior' },
@@ -133,6 +145,13 @@ function adicionarIngresso(dados) {
 // --- Salvar ---
 function salvar() {
   var dados = {
+    evento: {
+      nome: eventoNome.value.trim(),
+      data: eventoData.value.trim(),
+      horario: eventoHorario.value.trim(),
+      local: eventoLocal.value.trim(),
+      thumb: eventoThumb.value
+    },
     ingressos: []
   };
 
@@ -186,6 +205,20 @@ var lista = (dadosSalvos && dadosSalvos.ingressos && dadosSalvos.ingressos.lengt
   ? dadosSalvos.ingressos
   : fallbackIngressos;
 preencherFormulario({ ingressos: lista });
+
+// Preenche campos do evento se existirem
+if (dadosSalvos && dadosSalvos.evento) {
+  var ev = dadosSalvos.evento;
+  if (ev.nome)    eventoNome.value    = ev.nome;
+  if (ev.data)    eventoData.value    = ev.data;
+  if (ev.horario) eventoHorario.value = ev.horario;
+  if (ev.local)   eventoLocal.value   = ev.local;
+  if (ev.thumb) {
+    eventoThumb.value = ev.thumb;
+    thumbPreview.src = ev.thumb;
+    thumbPreview.style.display = 'block';
+  }
+}
 
 // --- Service Worker ---
 if ('serviceWorker' in navigator) {

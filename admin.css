@@ -82,6 +82,25 @@ body {
   color: #3d5456;
 }
 
+.field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #1b2729;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+  appearance: none;
+  cursor: pointer;
+}
+
+.field select:focus {
+  background: #223335;
+  box-shadow: 0 0 0 2px #82e9d2;
+}
+
 /* INGRESSO CARD */
 .ingresso-card {
   background: #1b2729;

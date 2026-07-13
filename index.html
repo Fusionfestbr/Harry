@@ -51,22 +51,39 @@
   <h2 class="month">Julho 2026</h2>
 
 
-  <a href="ingresso.html" class="event-card">
+  <a href="ingresso.html" class="event-card" id="eventCard">
     <div class="card-image">
-      <img src="assets/harry.png" class="thumb">
+      <img src="assets/harry.png" class="thumb" id="eventThumb">
       <span class="badge">AGORA</span>
     </div>
 
     <div class="event-info">
       <div class="top-line">
-        <span class="date">Sexta-feira 17</span>
-        <span class="date">20:45hs</span>
+        <span class="date" id="eventData">Sexta-feira 17</span>
+        <span class="date" id="eventHorario">20:45hs</span>
       </div>
 
-      <h3>Harry Styles: Together, Together</h3>
-      <p>MorumBis</p>
+      <h3 id="eventNome">Harry Styles: Together, Together</h3>
+      <p id="eventLocal">MorumBis</p>
     </div>
   </a>
+
+<script>
+(function() {
+  try {
+    var raw = localStorage.getItem('meus-ingressos-data');
+    if (!raw) return;
+    var dados = JSON.parse(raw);
+    var ev = dados && dados.evento;
+    if (!ev) return;
+    if (ev.thumb)   document.getElementById('eventThumb').src   = ev.thumb;
+    if (ev.nome)    document.getElementById('eventNome').textContent  = ev.nome;
+    if (ev.data)    document.getElementById('eventData').textContent  = ev.data;
+    if (ev.horario) document.getElementById('eventHorario').textContent = ev.horario;
+    if (ev.local)   document.getElementById('eventLocal').textContent  = ev.local;
+  } catch(e) {}
+})();
+</script>
 
 </div>
 
